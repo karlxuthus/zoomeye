@@ -7,9 +7,9 @@ import sys
 import os
 import json
 import pycurl
-import StringIO
-from Queue import Queue
-from urllib import quote
+from io import StringIO
+from multiprocessing import Queue as queue
+from urllib.parse import quote
 import threading
 import time
 import certifi
@@ -20,7 +20,7 @@ class Zoomeye(object):
     def __init__(self, username, password):
         self.USERNAME = username
         self.PASSWORD = password
-        self.queue = Queue()
+        self.queue = queue()
         self.API_TOKEN = None
         self.Done = False
 
@@ -41,7 +41,7 @@ class Zoomeye(object):
 
         ReturnData = json.loads(b.getvalue())
         if ReturnData.has_key('error'):
-            print "[!]%s: %s" % (ReturnData['error'], ReturnData['message'])
+            print ("[!]%s: %s" % (ReturnData['error'], ReturnData['message']))
             sys.exit()
 
         self.API_TOKEN = ReturnData['access_token']
@@ -53,7 +53,7 @@ class Zoomeye(object):
 
         self._getToken()
         if self.API_TOKEN == None:
-            print "[!]please config your API_TOKEN using function getToken() first"
+            print ("[!]please config your API_TOKEN using function getToken() first")
             sys.exit()
 
         query = quote(query)
@@ -103,7 +103,7 @@ class Zoomeye(object):
 
         self._getToken()
         if self.API_TOKEN == None:
-            print "[!]please config your API_TOKEN using function getToken() first"
+            print ("[!]please config your API_TOKEN using function getToken() first")
             sys.exit()
 
         while not self._getInfo("https://api.zoomeye.org/resources-info"):
@@ -126,7 +126,7 @@ class Zoomeye(object):
         
         self.info = json.loads(b.getvalue())
         if self.info.has_key('error'):
-            print "[!]%s: %s" % (self.info['error'], self.info['message'])
+            print ("[!]%s: %s" % (self.info['error'], self.info['message']))
             sys.exit()
 
     def run(self, fun, query, facets = '', pages = 10, search_type = 'host', port = False):
@@ -146,7 +146,7 @@ class Zoomeye(object):
             try:
                 time.sleep(0.1)
             except:
-                print '[!]User aborted, wait all slave threads to exit...'
+                print ('[!]User aborted, wait all slave threads to exit...')
                 self.Done = True
 
     def isReady(self):
