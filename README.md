@@ -53,3 +53,4 @@ You can use run function to run your functions with the returned data, it's usag
 You can use accountInfo function to get some infomation about your account:
 
 	info = z.accountInfo()
+#我在原有的基础上运行修改了已经更新的模块以及一些BUG，还在尝试中
